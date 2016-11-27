@@ -9,7 +9,7 @@
         posX: 0,
         posY: 0,
         goingTo: "E",
-        length: 3,
+        length: 6,
         size: 10,
         speed: 1
     };
@@ -26,6 +26,9 @@
     var height = 250;
     var _tTurnSouth_ = undefined;
     var _counterSouth_ = 0;
+    var _counterEast_ = 0;
+    var _counterWest_ = 0;
+
     /**
      * @author [rey]
      * @date        [11/27/2016]
@@ -127,6 +130,7 @@
                 break;
             case 39:
                 snake.goingTo = "E";
+                turnEast();
                 break;
         }
     }
@@ -142,56 +146,78 @@
         drawSnake();
     }
 
-    function drawSnake() {
+    function drawSnake(pIsDefined) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < snake.body.length; i++) {
-            switch (snake.goingTo) {
-                //North
-                case "N":
-                    snake.body[i].y -= snake.size;
-                    break;
-                    //South
-                case "S":
-                    snake.body[i].y += snake.size;
-                    break;
-                    //East
-                case "E":
-                    snake.body[i].x += snake.size;
-                    break;
-                    //West
-                case "W":
-                    snake.body[i].x -= snake.size;
-                    break;
-
+            if(!pIsDefined){
+                switch (snake.goingTo) {
+                    //North
+                    case "N":
+                        snake.body[i].y -= snake.size;
+                        break;
+                        //South
+                    case "S":
+                        snake.body[i].y += snake.size;
+                        break;
+                        //East
+                    case "E":
+                        snake.body[i].x += snake.size;
+                        break;
+                        //West
+                    case "W":
+                        snake.body[i].x -= snake.size;
+                        break;
+                }
             }
 
             // snake.body[i].x += snake.posX;
             // snake.body[i].y += snake.posY;
 
             ctx.fillRect(snake.body[i].x, snake.body[i].y, snake.size, snake.size);
+            ctx.fillRect(square.cPosX, square.cPosY, snake.size, snake.size);
         }
     }
 
     function moveSnake() {
-        _t_ = setInterval(function() {
-            drawSnake();
-            ctx.fillRect(square.cPosX, square.cPosY, snake.size, snake.size);
-        }, 1000 / snake.speed);
+        _t_ = setInterval(drawSnake, 1000 / snake.speed);
     }
 
     function turnSouth() {
-        _counterSouth_ = snake.body.length-1;
-        var firstMove = true;
+        _counterSouth_ = 1;
+
         _tTurnSouth_ = setInterval(function() {
-            snake.body[_counterSouth_].y += snake.size;
-            console.log(snake.body[_counterSouth_]);
-            for(var a=snake.body.length-2;a>=0;a--){
+            clearInterval(_t_);
+            for(var i=1;i<=_counterSouth_;i++)
+                snake.body[snake.body.length-i].y += snake.size;
+
+            for(var a=snake.body.length-(_counterSouth_+1);a>=0;a--){
                 snake.body[a].x += snake.size;
             }
 
-            drawSnake();
-            _counterSouth_--;
-            if (_counterSouth_ < 0) {
+            drawSnake(true);
+            _counterSouth_++;
+            if (_counterSouth_ >= snake.body.length) {
+                clearInterval(_tTurnSouth_);
+                moveSnake();
+            }
+        }, 1000 / snake.speed);
+    };
+
+    function turnEast() {
+        _counterEast_ = 1;
+
+        _tTurnSouth_ = setInterval(function() {
+            clearInterval(_t_);
+            for(var i=1;i<=_counterEast_;i++)
+                snake.body[snake.body.length-i].x += snake.size;
+
+            for(var a=snake.body.length-(_counterEast_+1);a>=0;a--){
+                snake.body[a].y += snake.size;
+            }
+
+            drawSnake(true);
+            _counterEast_++;
+            if (_counterEast_ >= snake.body.length) {
                 clearInterval(_tTurnSouth_);
                 moveSnake();
             }
