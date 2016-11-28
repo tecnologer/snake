@@ -44,6 +44,7 @@
             if(isMobile()){
                 canvas.width = document.body.clientWidth;
                 canvas.height = document.body.clientHeight;
+                snake.size = 30;
             }
             else{
                 canvas.width;
