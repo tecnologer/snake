@@ -116,28 +116,15 @@
      */
     function setDirecction(e) {
         var keyCode = e.keyCode || e.which;
-        // clearInterval(_t_);
 
-        switch (keyCode) {
-            case 38:
-                if(snake.goingTo!=="S")
-                    snake.goingTo = "N";
-                break;
-            case 40:
-                if(snake.goingTo!=="N")
-                    snake.goingTo = "S";
-                // turnSouth();
-                break;
-            case 37:
-                if(snake.goingTo!=="E")
-                    snake.goingTo = "W";
-                break;
-            case 39:
-                if(snake.goingTo!=="W")
-                    snake.goingTo = "E";
-                // turnEast();
-                break;
-        }
+        if((keyCode === 38 || this.id == "btnUp") && snake.goingTo!=="S")
+            snake.goingTo = "N";
+        else if((keyCode === 40 || this.id == "btnDown") && snake.goingTo!=="N")
+            snake.goingTo = "S";
+        else if((keyCode === 37 || this.id == "btnLeft") && snake.goingTo!=="E")
+            snake.goingTo = "W";
+        else if((keyCode === 39 || this.id == "btnRight") && snake.goingTo!=="W")
+            snake.goingTo = "E";
     }
 
     function buildSnake() {
@@ -216,6 +203,25 @@
 
         return false;
     }
+
+    function newGame(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        snake.body=[];
+        clearInterval(_t_);
+        buildSnake();
+        drawSquare();
+        moveSnake();
+        
+        score = 0;
+
+        document.getElementById("lblScore").innerHTML = score;
+    }
+
     constructor();
     document.addEventListener("keydown", setDirecction);
+    document.getElementById("btnNewGame").addEventListener("click",newGame);
+    document.getElementById("btnUp").addEventListener("click",setDirecction);
+    document.getElementById("btnDown").addEventListener("click",setDirecction);
+    document.getElementById("btnLeft").addEventListener("click",setDirecction);
+    document.getElementById("btnRight").addEventListener("click",setDirecction);
 })();
