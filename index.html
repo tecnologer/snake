@@ -21,10 +21,45 @@
         .control-container{            
             display: none;
         }
-        @media screen 
-         and (device-width: 360px) 
-         and (device-height: 640px) 
-         and (-webkit-device-pixel-ratio: 3) {
+        .game-over{
+            position: fixed;
+            display: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            height: 76px;
+            padding-top: 35px;
+            padding-bottom: 20px;
+            padding-left: 45px;
+            width: 100%;
+            margin-top: 45px;
+        }
+        .game-over>div{
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+        }
+        @media only screen and (min-device-width : 320px) and (max-device-width : 480px){
+            .control-container{
+                display: block;
+            }
+            .control-container>table{
+                width: 100%;
+                text-align: center;
+            }
+            .btnControl{
+                width: 250px;
+                height: 250px;
+            }
+            canvas{
+                width: 100%;
+                height: 50%;
+            }
+
+            #btnNewGame{
+                width: 100px;
+                height: 100px;
+            }
+        }
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
             .control-container{
                 display: block;
             }
@@ -50,6 +85,9 @@
 </head>
 
 <body>
+    <div class="game-over">
+        <div>Game Over</div>
+    </div>
     <div>
         <canvas id="snake">
             This browser is not supported

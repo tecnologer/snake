@@ -19,16 +19,23 @@
         cPosY: 0
     };
 
-    var score = 0;
+    var game = {
+        score: 0,
+        //value to increase the speed
+        speedIncrease: 5,
+        //every N (value of pivot) points, the speed increases
+        speedPivot: 5,
+        //maximum value of the speed
+        maxSpeed: 30,
+        //last score when the speed was increased
+        lastScore: 0
+    };
+
     var ctx = undefined;
     var canvas = undefined;
     var _t_ = undefined;
     var width = 450;
     var height = 250;
-    var _tTurnSouth_ = undefined;
-    var _counterSouth_ = 0;
-    var _counterEast_ = 0;
-    var _counterWest_ = 0;
 
     /**
      * @author [rey]
@@ -42,8 +49,8 @@
         if (canvas && canvas.getContext) {
             //set size canvas
             if(isMobile()){
-                canvas.width = document.body.clientWidth;
-                canvas.height = document.body.clientHeight;
+                canvas.width = document.body.clientWidth*0.90;
+                canvas.height = document.body.clientHeight*0.60;
                 snake.size = 30;
             }
             else{
@@ -53,8 +60,7 @@
 
             canvas.style.width = canvas.width + "px";
             canvas.style.height = canvas.height + "px";
-
-            console.log(document.body.clientWidth);
+            document.getElementsByClassName("game-over")[0].style.width = (canvas.width-46) + "px";
             //get context
             ctx = canvas.getContext('2d');
             //draw snake
@@ -172,6 +178,7 @@
 
         if(isDead(nextMove)){
             clearInterval(_t_);
+            document.getElementsByClassName("game-over")[0].style.display = "block";
         }
         else{
             ctx.clearRect(snake.body[0].x, snake.body[0].y, snake.size, snake.size);
@@ -179,6 +186,13 @@
             snake.body.push(nextMove);
             ctx.fillRect(nextMove.x, nextMove.y, snake.size, snake.size);
             foundSquare(nextMove);
+
+            if(game.score != game.lastScore && game.score>0 && game.score % game.speedPivot == 0 && snake.speed <= game.maxSpeed){
+                clearInterval(_t_);
+                game.lastScore = game.score;
+                snake.speed += game.speedIncrease;
+                moveSnake();
+            }
         }
     }
     function moveSnake() {
@@ -195,9 +209,9 @@
        if(snake_head.x == square.cPosX && snake_head.y == square.cPosY){
             snake.body.push({x: square.cPosX, y: square.cPosY});
             drawSquare();
-            score++;
+            game.score++;
 
-            document.getElementById("lblScore").innerHTML = score;
+            document.getElementById("lblScore").innerHTML = game.score;
        }
     }
 
@@ -223,9 +237,11 @@
         drawSquare();
         moveSnake();
         
-        score = 0;
+        document.getElementsByClassName("game-over")[0].style.display = "none";
+        game.score = 0;
+        game.lastScore = 0;
 
-        document.getElementById("lblScore").innerHTML = score;
+        document.getElementById("lblScore").innerHTML = game.score;
     }
 
     function isMobile(){
