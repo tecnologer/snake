@@ -6,12 +6,10 @@
     //position of snake
     var snake = {
         body: [],
-        posX: 0,
-        posY: 0,
         goingTo: "E",
         length: 3,
         size: 10,
-        speed: 4
+        speed: 5
     };
     //position for the square
     var square = {
@@ -28,7 +26,9 @@
         //maximum value of the speed
         maxSpeed: 30,
         //last score when the speed was increased
-        lastScore: 0
+        lastScore: 0,
+        //initial speed, keep for restore at new game
+        defaultSpeed: snake.speed
     };
 
     var ctx = undefined;
@@ -98,31 +98,10 @@
      * @return      {Boolean}                        [description]
      */
     function isNotValidPosition(nPosX, nPosY) {
-        var isNotValid = nPosX % snake.size != 0 || nPosY % snake.size != 0 || nPosX == nPosY;
-
-        if (nPosX % snake.size == 0 && nPosY % snake.size == 0 && nPosX !== nPosY) {
-            switch (snake.goingTo) {
-                //North
-                case "N":
-                    isNotValid = (nPosY > snake.posX && nPosY < (snake.size * snake.length)) || (nPosY > snake.posX && nPosY < (snake.size * snake.length))
-                    break;
-                    //South
-                case "S":
-                    isNotValid = (nPosY > snake.posX && nPosY < (snake.size * snake.length)) || (nPosY > snake.posX && nPosY < (snake.size * snake.length))
-                    break;
-                    //East
-                case "E":
-                    isNotValid = (nPosX > snake.posX && nPosX < (snake.size * snake.length)) || (nPosX > snake.posX && nPosX < (snake.size * snake.length))
-                    break;
-                    //West
-                case "W":
-                    isNotValid = (nPosX < snake.posX && nPosX > (snake.size * snake.length)) || (nPosX < snake.posX && nPosX > (snake.size * snake.length))
-                    break;
-
-            }
-        }
-
-        return isNotValid;
+        return nPosX % snake.size != 0 || 
+               nPosY % snake.size != 0 || 
+               nPosX == nPosY || 
+               isDead({x: nPosX, y: nPosY});
     }
     /**
      * @author [rey]
@@ -142,7 +121,12 @@
         else if((keyCode === 39 || this.id == "btnRight") && snake.goingTo!=="W")
             snake.goingTo = "E";
     }
-
+    /**
+     * @author [rey]
+     * @date        [11/28/2016]
+     * @description [buildSnake  description]
+     * @return      {[type]}     [description]
+     */
     function buildSnake() {
         for (var i = 1; i <= snake.length; i++) {
             snake.body.push({
@@ -153,7 +137,13 @@
             ctx.fillRect(snake.size * i, 0, snake.size, snake.size);
         }
     }
-
+    /**
+     * @author [rey]
+     * @date        [11/28/2016]
+     * @description [drawSnake   description]
+     * @param       {[type]}     pIsDefined   [description]
+     * @return      {[type]}                  [description]
+     */
     function drawSnake(pIsDefined) {
         var nextMove = {x: snake.body[snake.body.length-1].x, y: snake.body[snake.body.length-1].y};
 
@@ -195,11 +185,17 @@
             }
         }
     }
+    /**
+     * @author [rey]
+     * @date        [11/28/2016]
+     * @description [moveSnake   description]
+     * @return      {[type]}     [description]
+     */
     function moveSnake() {
         _t_ = setInterval(drawSnake, 1000 / snake.speed);
     }
     /**
-     * @author [carlos]
+     * @author [rey]
      * @date        [11/28/2016]
      * @description [foundSquare description]
      * @param       {[type]}     snake_head   [description]
@@ -214,7 +210,13 @@
             document.getElementById("lblScore").innerHTML = game.score;
        }
     }
-
+    /**
+     * @author [rey]
+     * @date        [11/28/2016]
+     * @description [isDead      description]
+     * @param       {[type]}     snake_head   [description]
+     * @return      {Boolean}                 [description]
+     */
     function isDead(snake_head){
         if(snake_head.x < 0 || (snake_head.x + snake.size)>canvas.width || snake_head.y<0 || (snake_head.y + snake.size)> canvas.height){
             return true;
@@ -227,12 +229,18 @@
 
         return false;
     }
-
+    /**
+     * @author [rey]
+     * @date        [11/28/2016]
+     * @description [newGame     description]
+     * @return      {[type]}     [description]
+     */
     function newGame(){
+        clearInterval(_t_);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         snake.goingTo = "E";
         snake.body=[];
-        clearInterval(_t_);
+        snake.speed = game.defaultSpeed;
         buildSnake();
         drawSquare();
         moveSnake();
