@@ -9,9 +9,9 @@
         posX: 0,
         posY: 0,
         goingTo: "E",
-        length: 6,
+        length: 3,
         size: 10,
-        speed: 1
+        speed: 4
     };
     //position for the square
     var square = {
@@ -19,6 +19,7 @@
         cPosY: 0
     };
 
+    var score = 0;
     var ctx = undefined;
     var canvas = undefined;
     var _t_ = undefined;
@@ -115,22 +116,26 @@
      */
     function setDirecction(e) {
         var keyCode = e.keyCode || e.which;
-        clearInterval(_t_);
+        // clearInterval(_t_);
 
         switch (keyCode) {
             case 38:
-                snake.goingTo = "N";
+                if(snake.goingTo!=="S")
+                    snake.goingTo = "N";
                 break;
             case 40:
-                snake.goingTo = "S";
-                turnSouth();
+                if(snake.goingTo!=="N")
+                    snake.goingTo = "S";
+                // turnSouth();
                 break;
             case 37:
-                snake.goingTo = "W";
+                if(snake.goingTo!=="E")
+                    snake.goingTo = "W";
                 break;
             case 39:
-                snake.goingTo = "E";
-                turnEast();
+                if(snake.goingTo!=="W")
+                    snake.goingTo = "E";
+                // turnEast();
                 break;
         }
     }
@@ -141,89 +146,76 @@
                 x: snake.size * i,
                 y: 0
             });
-        }
 
-        drawSnake();
+            ctx.fillRect(snake.size * i, 0, snake.size, snake.size);
+        }
     }
 
     function drawSnake(pIsDefined) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < snake.body.length; i++) {
-            if(!pIsDefined){
-                switch (snake.goingTo) {
-                    //North
-                    case "N":
-                        snake.body[i].y -= snake.size;
-                        break;
-                        //South
-                    case "S":
-                        snake.body[i].y += snake.size;
-                        break;
-                        //East
-                    case "E":
-                        snake.body[i].x += snake.size;
-                        break;
-                        //West
-                    case "W":
-                        snake.body[i].x -= snake.size;
-                        break;
-                }
-            }
+        var nextMove = {x: snake.body[snake.body.length-1].x, y: snake.body[snake.body.length-1].y};
 
-            // snake.body[i].x += snake.posX;
-            // snake.body[i].y += snake.posY;
+        switch (snake.goingTo) {
+            //North
+            case "N":
+                nextMove.y -= snake.size;
+                break;
+                //South
+            case "S":
+                nextMove.y += snake.size;
+                break;
+                //East
+            case "E":
+                nextMove.x += snake.size;
+                break;
+                //West
+            case "W":
+                nextMove.x -= snake.size;
+                break;
+        }
 
-            ctx.fillRect(snake.body[i].x, snake.body[i].y, snake.size, snake.size);
-            ctx.fillRect(square.cPosX, square.cPosY, snake.size, snake.size);
+        if(isDead(nextMove)){
+            clearInterval(_t_);
+        }
+        else{
+            ctx.clearRect(snake.body[0].x, snake.body[0].y, snake.size, snake.size);
+            snake.body.splice(0,1);
+            snake.body.push(nextMove);
+            ctx.fillRect(nextMove.x, nextMove.y, snake.size, snake.size);
+            foundSquare(nextMove);
         }
     }
-
     function moveSnake() {
         _t_ = setInterval(drawSnake, 1000 / snake.speed);
     }
+    /**
+     * @author [carlos]
+     * @date        [11/28/2016]
+     * @description [foundSquare description]
+     * @param       {[type]}     snake_head   [description]
+     * @return      {[type]}                  [description]
+     */
+    function foundSquare(snake_head){
+       if(snake_head.x == square.cPosX && snake_head.y == square.cPosY){
+            snake.body.push({x: square.cPosX, y: square.cPosY});
+            drawSquare();
+            score++;
 
-    function turnSouth() {
-        _counterSouth_ = 1;
+            document.getElementById("lblScore").innerHTML = score;
+       }
+    }
 
-        _tTurnSouth_ = setInterval(function() {
-            clearInterval(_t_);
-            for(var i=1;i<=_counterSouth_;i++)
-                snake.body[snake.body.length-i].y += snake.size;
+    function isDead(snake_head){
+        if(snake_head.x < 0 || (snake_head.x + snake.size)>canvas.width || snake_head.y<0 || (snake_head.y + snake.size)> canvas.height){
+            return true;
+        }
+        else{
+            for(var i=0;i<snake.body.length-2;i++)
+                if(snake.body[i].x === snake_head.x && snake.body[i].y===snake_head.y)
+                    return true;
+        }
 
-            for(var a=snake.body.length-(_counterSouth_+1);a>=0;a--){
-                snake.body[a].x += snake.size;
-            }
-
-            drawSnake(true);
-            _counterSouth_++;
-            if (_counterSouth_ >= snake.body.length) {
-                clearInterval(_tTurnSouth_);
-                moveSnake();
-            }
-        }, 1000 / snake.speed);
-    };
-
-    function turnEast() {
-        _counterEast_ = 1;
-
-        _tTurnSouth_ = setInterval(function() {
-            clearInterval(_t_);
-            for(var i=1;i<=_counterEast_;i++)
-                snake.body[snake.body.length-i].x += snake.size;
-
-            for(var a=snake.body.length-(_counterEast_+1);a>=0;a--){
-                snake.body[a].y += snake.size;
-            }
-
-            drawSnake(true);
-            _counterEast_++;
-            if (_counterEast_ >= snake.body.length) {
-                clearInterval(_tTurnSouth_);
-                moveSnake();
-            }
-        }, 1000 / snake.speed);
-    };
-
+        return false;
+    }
     constructor();
     document.addEventListener("keydown", setDirecction);
 })();
