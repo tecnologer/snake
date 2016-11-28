@@ -18,6 +18,18 @@
             width: 60px;
             height: 60px;
         }
+        .control-container{            
+            display: none;
+        }
+        @media (max-width: 750px) {
+            .control-container{
+                display: block;
+            }
+            .btnControl{
+                width: 130px;
+                height: 130px;
+            }            
+        }
     </style>
 </head>
 
@@ -33,7 +45,7 @@
     <div>
         <button id="btnNewGame">New Game</button>
     </div>
-    <div>
+    <div class="control-container">
         <table>
             <tr>
                 <td></td>
