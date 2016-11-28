@@ -21,14 +21,24 @@
         .control-container{            
             display: none;
         }
-        @media (max-width: 750px) {
+        @media screen 
+         and (device-width: 360px) 
+         and (device-height: 640px) 
+         and (-webkit-device-pixel-ratio: 3) {
             .control-container{
                 display: block;
             }
+            .control-container>table{
+                width: 100%;
+            }
             .btnControl{
-                width: 130px;
-                height: 130px;
-            }            
+                width: 150px;
+                height: 150px;
+            }
+            canvas{
+                width: 100%;
+                height: 50%;
+            }
         }
     </style>
 </head>

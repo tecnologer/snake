@@ -41,10 +41,19 @@
 
         if (canvas && canvas.getContext) {
             //set size canvas
-            canvas.width = width;
-            canvas.height = height;
+            if(isMobile()){
+                canvas.width = document.body.clientWidth;
+                canvas.height = document.body.clientHeight;
+            }
+            else{
+                canvas.width;
+                canvas.height = height;
+            }
+
             canvas.style.width = canvas.width + "px";
             canvas.style.height = canvas.height + "px";
+
+            console.log(document.body.clientWidth);
             //get context
             ctx = canvas.getContext('2d');
             //draw snake
@@ -206,6 +215,7 @@
 
     function newGame(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        snake.goingTo = "E";
         snake.body=[];
         clearInterval(_t_);
         buildSnake();
@@ -215,6 +225,16 @@
         score = 0;
 
         document.getElementById("lblScore").innerHTML = score;
+    }
+
+    function isMobile(){
+        return navigator.userAgent.match(/Android/i)
+         || navigator.userAgent.match(/webOS/i)
+         || navigator.userAgent.match(/iPhone/i)
+         || navigator.userAgent.match(/iPad/i)
+         || navigator.userAgent.match(/iPod/i)
+         || navigator.userAgent.match(/BlackBerry/i)
+         || navigator.userAgent.match(/Windows Phone/i);
     }
 
     constructor();
