@@ -49,9 +49,9 @@
         if (canvas && canvas.getContext) {
             //set size canvas
             if(isMobile()){
-                canvas.width = document.body.clientWidth*0.90;
-                canvas.height = document.body.clientHeight*0.60;
-                snake.size = 30;
+                canvas.width = document.body.clientWidth*0.99;
+                canvas.height = document.body.clientHeight*0.50;
+                snake.size = 20;
             }
             else{
                 canvas.width;
@@ -271,7 +271,7 @@
 
     constructor();
     document.addEventListener("keydown", setDirecction);
-    document.getElementById("btnNewGame").addEventListener("click",newGame);
+    document.getElementsByClassName("game-over")[0].addEventListener("click",newGame);
     document.getElementById("btnUp").addEventListener("click",setDirecction);
     document.getElementById("btnDown").addEventListener("click",setDirecction);
     document.getElementById("btnLeft").addEventListener("click",setDirecction);
