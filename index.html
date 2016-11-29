@@ -2,86 +2,9 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width">
     <title>Snake Tecnologer</title>
-    <style type="text/css">
-        canvas {
-            border: 1px solid black;
-            width: 250px;
-            height: 250px;
-        }
-        #lblScore{
-            font-size: 64px;
-            color: #090;
-            margin: 20px 0;
-        }
-        .btnControl{
-            width: 60px;
-            height: 60px;
-        }
-        .control-container{            
-            display: none;
-        }
-        .game-over{
-            position: fixed;
-            display: none;
-            background-color: rgba(0, 0, 0, 0.5);
-            height: 76px;
-            padding-top: 35px;
-            padding-bottom: 20px;
-            padding-left: 45px;
-            width: 100%;
-            margin-top: 45px;
-        }
-        .game-over>div{
-            color: white;
-            font-size: 50px;
-            font-weight: bold;
-        }
-        @media only screen and (min-device-width : 320px) and (max-device-width : 480px){
-            .control-container{
-                display: block;
-            }
-            .control-container>table{
-                width: 100%;
-                text-align: center;
-            }
-            .btnControl{
-                width: 250px;
-                height: 250px;
-            }
-            canvas{
-                width: 100%;
-                height: 50%;
-            }
-
-            #btnNewGame{
-                width: 100px;
-                height: 100px;
-            }
-        }
-        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
-            .control-container{
-                display: block;
-            }
-            .control-container>table{
-                width: 100%;
-                text-align: center;
-            }
-            .btnControl{
-                width: 250px;
-                height: 250px;
-            }
-            canvas{
-                width: 100%;
-                height: 50%;
-            }
-
-            #btnNewGame{
-                width: 100px;
-                height: 100px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/snake.css">
 </head>
 
 <body>
@@ -104,19 +27,19 @@
             <tr>
                 <td></td>
                 <td>
-                    <button class="btnControl" id="btnUp">Up</button>
+                    <button class="btn-controllers btn-up" id="btnUp"></button>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <button class="btnControl" id="btnLeft">Left</button>
+                    <button class="btn-controllers btn-left" id="btnLeft"></button>
                 </td>
                 <td>
-                    <button class="btnControl" id="btnDown">Down</button>
+                    <button class="btn-controllers btn-down" id="btnDown"></button>
                 </td>
                 <td>
-                    <button class="btnControl" id="btnRight">Right</button>
+                    <button class="btn-controllers btn-right" id="btnRight"></button>
                 </td>
             </tr>
         </table>
@@ -125,5 +48,5 @@
         <a href="https://github.com/Tecnologer/snake" target="_blank">Source Code</a>
     </div>
 </body>
-<script type="text/javascript" src="actions.js"></script>
+<script type="text/javascript" src="js/actions.js"></script>
 </html>

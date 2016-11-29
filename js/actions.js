@@ -110,8 +110,13 @@
      * @param       {[type]}       e            [description]
      */
     function setDirecction(e) {
+        //if the snake is turning, cancel the instruction
+        if(snake.turning)
+            return;
+
         var keyCode = e.keyCode || e.which;
 
+        snake.turning = true;
         if((keyCode === 38 || this.id == "btnUp") && snake.goingTo!=="S")
             snake.goingTo = "N";
         else if((keyCode === 40 || this.id == "btnDown") && snake.goingTo!=="N")
@@ -120,6 +125,8 @@
             snake.goingTo = "W";
         else if((keyCode === 39 || this.id == "btnRight") && snake.goingTo!=="W")
             snake.goingTo = "E";
+        else
+            snake.turning = false;
     }
     /**
      * @author [rey]
@@ -176,7 +183,7 @@
             snake.body.push(nextMove);
             ctx.fillRect(nextMove.x, nextMove.y, snake.size, snake.size);
             foundSquare(nextMove);
-
+            snake.turning = false;
             if(game.score != game.lastScore && game.score>0 && game.score % game.speedPivot == 0 && snake.speed <= game.maxSpeed){
                 clearInterval(_t_);
                 game.lastScore = game.score;
