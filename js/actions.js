@@ -28,7 +28,8 @@
         //last score when the speed was increased
         lastScore: 0,
         //initial speed, keep for restore at new game
-        defaultSpeed: snake.speed
+        defaultSpeed: snake.speed,
+        isGameOver: false
     };
 
     var ctx = undefined;
@@ -113,6 +114,10 @@
         //if the snake is turning, cancel the instruction
         if(snake.turning)
             return;
+        if(game.isGameOver){            
+            newGame();
+            return;
+        }
 
         var keyCode = e.keyCode || e.which;
 
@@ -176,6 +181,7 @@
         if(isDead(nextMove)){
             clearInterval(_t_);
             document.getElementsByClassName("game-over")[0].style.display = "block";
+            game.isGameOver = true;
         }
         else{
             ctx.clearRect(snake.body[0].x, snake.body[0].y, snake.size, snake.size);
@@ -183,7 +189,7 @@
             snake.body.push(nextMove);
             ctx.fillRect(nextMove.x, nextMove.y, snake.size, snake.size);
             foundSquare(nextMove);
-            snake.turning = false;
+            
             if(game.score != game.lastScore && game.score>0 && game.score % game.speedPivot == 0 && snake.speed <= game.maxSpeed){
                 clearInterval(_t_);
                 game.lastScore = game.score;
@@ -191,6 +197,8 @@
                 moveSnake();
             }
         }
+        
+        snake.turning = false;
     }
     /**
      * @author [rey]
@@ -248,6 +256,7 @@
         snake.goingTo = "E";
         snake.body=[];
         snake.speed = game.defaultSpeed;
+        game.isGameOver = false;
         buildSnake();
         drawSquare();
         moveSnake();
